@@ -3,14 +3,15 @@ import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
 class DataModule(pl.LightningDataModule):
-    def __init__(self, model_name="google/bert_uncased_L-2_H-128_A-2", batch_size=32):
+    def __init__(self, dataset, model_name="google/bert_uncased_L-2_H-128_A-2", batch_size=32):
         super().__init__()
 
+        self.dataset = dataset
         self.batch_size = batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    def prepare_data(self, dataset):
-        emotion_ds = dataset
+    def prepare_data(self):
+        emotion_ds = self.dataset
         self.train_data = emotion_ds["train"]
         self.val_data = emotion_ds["validation"]
 
@@ -41,5 +42,5 @@ class DataModule(pl.LightningDataModule):
     
     def val_dataloader(self):
         return torch.utils.data.DataLoader(
-            self.val_data, batch_size=self.batch_size, shuffle=True
+            self.val_data, batch_size=self.batch_size, shuffle=False
         )

@@ -6,12 +6,12 @@ from transformers import AutoModel
 from sklearn.metrics import accuracy_score
 
 class EmoModel(pl.LightningModule):
-    def __init__(self, model_name="google/bert_uncased_L-2_H-128_A-2", lr=1e-2):
+    def __init__(self, model_name="google/bert_uncased_L-2_H-128_A-2", lr=2e-5):
         super(EmoModel, self).__init__()
         self.save_hyperparameters()
 
         self.bert = AutoModel.from_pretrained(model_name)
-        self.W = nn.Linear(self.bert.config.hidden_size, 2)
+        self.W = nn.Linear(self.bert.config.hidden_size, 6)
         self.num_classes = 2
 
     def forward(self, input_ids, attention_mask):
